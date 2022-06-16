@@ -16,7 +16,7 @@ namespace LanchesMac.Models
 
         [Required(ErrorMessage = "A descrição do lanche deve ser informada")]
         [Display(Name = "Descrição do lanche")]
-        [MinLength(20, ErrorMessage = "Descrição deve ter no mínimo {1} caracteres")]
+        [MinLength(20, ErrorMessage = "DescriçãoA deve ter no mínimo {1} caracteres")]
         [MaxLength(200, ErrorMessage = "Descrição não pode exceder {1} carateres")]
         public string DescricaoCurta { get; private set; }
 
