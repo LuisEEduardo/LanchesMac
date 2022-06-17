@@ -14,7 +14,13 @@ namespace LanchesMac.Controllers
 
         public IActionResult List()
         {
+            ViewData["Titulo"] = "Todos os Lanches";
+            ViewData["Data"] = DateTime.Now;
             var lanches = _lancheRepositorio.Lanches;
+
+            var totalLanches = lanches.Count();
+            ViewBag.Total = $"Total de lanches: {totalLanches}";
+
             return View(lanches);
         }
     }
