@@ -14,6 +14,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddTransient<ILancheRepositorio, LancheRepositorio>();
 
+// Configuração do HttpContext
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// Configuração da Session
+builder.Services.AddMemoryCache();
+builder.Services.AddSession();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,8 +34,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+// Configuração da Session
+app.UseSession();
 
 app.UseAuthorization();
 
