@@ -1,6 +1,5 @@
 ﻿using LanchesMac.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace LanchesMac.Models
 {
@@ -13,8 +12,8 @@ namespace LanchesMac.Models
             _context = context;
         }
 
-        public string Id { get; private set; }
-        public List<CarrinhoCompraItem> CarrinhoCompraItens { get; private set; }
+        public string Id { get; set; }
+        public List<CarrinhoCompraItem> CarrinhoCompraItens { get; set; }
 
         public static CarrinhoCompra GetCarrinho(IServiceProvider services)
         {
@@ -46,9 +45,20 @@ namespace LanchesMac.Models
                                  && x.CarrinhoCompraId == Id);
 
             if (carrinhoCompraItem == null)
-                _context.CarrinhoCompraItens.Add(new CarrinhoCompraItem(lanche, 1, Id));
+            {
+                carrinhoCompraItem = new CarrinhoCompraItem
+                {
+                    CarrinhoCompraId = Id,
+                    Lanche = lanche,
+                    Quantidade = 1
+                };
+
+                _context.CarrinhoCompraItens.Add(carrinhoCompraItem);
+            }
             else
-                carrinhoCompraItem.AumentarQuantidade(1);
+            {
+                carrinhoCompraItem.Quantidade++;
+            }
 
             _context.SaveChanges();
         }
@@ -66,7 +76,7 @@ namespace LanchesMac.Models
             {
                 if (carrinhoCompraItem.Quantidade > 1)
                 {
-                    carrinhoCompraItem.DiminuirQuantidade(1);
+                    carrinhoCompraItem.Quantidade = 1;
                     quantidadeLocal = carrinhoCompraItem.Quantidade;
                 }
                 else
@@ -104,12 +114,7 @@ namespace LanchesMac.Models
                                 .Select(x => x.Lanche.Preco * x.Quantidade)
                                 .Sum();
             return total;
-        }
-
-        public void AdicionarCarrinhoCompraItens(List<CarrinhoCompraItem> carrinhoCompraItens)
-        {
-            CarrinhoCompraItens = carrinhoCompraItens;
-        }
+        }        
 
     }
 }

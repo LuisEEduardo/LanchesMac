@@ -13,7 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
-builder.Services.AddTransient<ILancheRepositorio, LancheRepositorio>();
+builder.Services.AddScoped<ILancheRepositorio, LancheRepositorio>();
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 // Configuração do HttpContext

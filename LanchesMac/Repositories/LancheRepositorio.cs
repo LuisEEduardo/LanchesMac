@@ -14,21 +14,20 @@ namespace LanchesMac.Repositories
             _context = context;
         }
 
-        public IEnumerable<Lanche> Lanches 
-            =>  _context
+        public IEnumerable<Lanche> Lanches
+            => _context
                 .Lanches
                 .AsNoTracking()
                 .Include(c => c.Categoria);
 
-        public IEnumerable<Lanche> LanchesPreferidos 
-            =>  _context
+        public IEnumerable<Lanche> LanchesPreferidos
+            => _context
                 .Lanches
-                .AsNoTracking()
-                .Where(p => p.IsLanchePreferido)
-                .Include(c => c.Categoria);
-
+                .Where(x => x.IsLanchePreferido)
+                .Include(x => x.Categoria);
+        
         public Lanche GetLancheById(int lancheId)
-            =>  _context
+            => _context
                 .Lanches
                 .AsNoTracking()
                 .FirstOrDefault(i => i.Id == lancheId);
