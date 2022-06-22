@@ -1,4 +1,5 @@
 using LanchesMac.Context;
+using LanchesMac.Models;
 using LanchesMac.Repositories;
 using LanchesMac.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddTransient<ILancheRepositorio, LancheRepositorio>();
+builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 // Configuração do HttpContext
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

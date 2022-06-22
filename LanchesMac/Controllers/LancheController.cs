@@ -14,10 +14,12 @@ namespace LanchesMac.Controllers
         }
 
         public IActionResult List()
-        {            
-            var lanchesListViewModel = new LancheListViewModel();
-            lanchesListViewModel.Lanches = _lancheRepositorio.Lanches;
-            lanchesListViewModel.CategoriaAtual = "Categoria atual";
+        {
+            var lanchesListViewModel = new LancheListViewModel
+            {
+                Lanches = _lancheRepositorio.Lanches,
+                CategoriaAtual = "Categoria atual"
+            };
 
             return View(lanchesListViewModel);
         }

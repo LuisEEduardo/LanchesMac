@@ -106,6 +106,10 @@ namespace LanchesMac.Models
             return total;
         }
 
+        public void AdicionarCarrinhoCompraItens(List<CarrinhoCompraItem> carrinhoCompraItens)
+        {
+            CarrinhoCompraItens = carrinhoCompraItens;
+        }
 
     }
 }
