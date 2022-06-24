@@ -1,7 +1,6 @@
 ﻿using LanchesMac.Context;
 using LanchesMac.Models;
 using LanchesMac.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace LanchesMac.Repositories
 {
@@ -15,8 +14,7 @@ namespace LanchesMac.Repositories
         }
 
         public IEnumerable<Categoria> Categorias
-            =>  _context
-                .Categorias
-                .AsNoTracking();
+            => _context
+                .Categorias;
     }
 }

@@ -18,13 +18,13 @@ namespace LanchesMac.Controllers
 
         public IActionResult Index()
         {
-            var itens = _carrinhoCompra.GetCarrinhoCompraItems();
+            var itens = _carrinhoCompra.GetCarrinhoCompraItens();
             _carrinhoCompra.CarrinhoCompraItens = itens;
 
             var carrinhoCompraVM = new CarrinhoCompraViewModel
             {
                 CarrinhoCompra = _carrinhoCompra,
-                CarrinhoCompraTotal = _carrinhoCompra.GetCarrinhoTotal()
+                CarrinhoCompraTotal = _carrinhoCompra.GetCarrinhoCompraTotal()
             };
 
             return View(carrinhoCompraVM);
@@ -36,7 +36,7 @@ namespace LanchesMac.Controllers
                                             .Lanches
                                             .FirstOrDefault(p => p.Id == lancheId);
 
-            if (lancheSelecionado == null)
+            if (lancheSelecionado != null)
                 _carrinhoCompra.AdicionarAoCarrinho(lancheSelecionado);
 
             return RedirectToAction("Index");

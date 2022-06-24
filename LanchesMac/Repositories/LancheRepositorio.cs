@@ -17,7 +17,6 @@ namespace LanchesMac.Repositories
         public IEnumerable<Lanche> Lanches
             => _context
                 .Lanches
-                .AsNoTracking()
                 .Include(c => c.Categoria);
 
         public IEnumerable<Lanche> LanchesPreferidos
@@ -29,7 +28,6 @@ namespace LanchesMac.Repositories
         public Lanche GetLancheById(int lancheId)
             => _context
                 .Lanches
-                .AsNoTracking()
                 .FirstOrDefault(i => i.Id == lancheId);
 
     }

@@ -76,7 +76,7 @@ namespace LanchesMac.Models
             {
                 if (carrinhoCompraItem.Quantidade > 1)
                 {
-                    carrinhoCompraItem.Quantidade = 1;
+                    carrinhoCompraItem.Quantidade--;
                     quantidadeLocal = carrinhoCompraItem.Quantidade;
                 }
                 else
@@ -89,11 +89,10 @@ namespace LanchesMac.Models
             return quantidadeLocal;
         }
 
-        public List<CarrinhoCompraItem> GetCarrinhoCompraItems()
+        public List<CarrinhoCompraItem> GetCarrinhoCompraItens()
         {
             return CarrinhoCompraItens ??= _context.CarrinhoCompraItens
-                                            .Where(x => x.CarrinhoCompraId == Id)
-                                            .AsNoTracking()
+                                            .Where(x => x.CarrinhoCompraId == Id)                                            
                                             .Include(x => x.Lanche)
                                             .ToList();
         }
@@ -107,12 +106,13 @@ namespace LanchesMac.Models
             _context.SaveChanges();
         }
 
-        public decimal GetCarrinhoTotal()
+        public decimal GetCarrinhoCompraTotal()
         {
-            var total = _context.CarrinhoCompraItens
-                                .Where(x => x.CarrinhoCompraId == Id)
-                                .Select(x => x.Lanche.Preco * x.Quantidade)
-                                .Sum();
+            var total = _context
+                            .CarrinhoCompraItens
+                            .Where(x => x.CarrinhoCompraId == Id)
+                            .Select(x => x.Lanche.Preco * x.Quantidade)
+                            .Sum();
             return total;
         }        
 
