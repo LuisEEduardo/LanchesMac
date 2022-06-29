@@ -30,7 +30,7 @@ namespace LanchesMac.Controllers
             if (!ModelState.IsValid)
                 return View(loginVM);
 
-            var user = await _userManager.FindByEmailAsync(loginVM.UserName);
+            var user = await _userManager.FindByNameAsync(loginVM.UserName);
 
             if (user != null)
             {
