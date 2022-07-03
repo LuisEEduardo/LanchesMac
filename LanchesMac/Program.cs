@@ -2,6 +2,7 @@ using LanchesMac.Context;
 using LanchesMac.Models;
 using LanchesMac.Repositories;
 using LanchesMac.Repositories.Interfaces;
+using LanchesMac.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,8 @@ builder.Services.AddScoped<ILancheRepositorio, LancheRepositorio>();
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 builder.Services.AddTransient<IPedidoRespository, PedidoRepository>();
 
+builder.Services.AddScoped<ISeedUserRoleInicial, SeedUserRoleInitial>();
+
 // Configuração do HttpContext
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -42,6 +45,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 
 var app = builder.Build();
+ISeedUserRoleInicial seedUserRoleInicial = app.Services.GetRequiredService<ISeedUserRoleInicial>();    
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -54,6 +58,12 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Criar os perfis
+seedUserRoleInicial.SeedRoles();
+// Criar os usuários e atribui os perfis
+seedUserRoleInicial.SeedUsers();
+
 // Configuração da Session
 app.UseSession();
 
@@ -73,7 +83,7 @@ app.UseEndpoints(endpoints =>
 
     endpoints.MapControllerRoute(
       name: "areas",
-      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+      pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}"
     );
 });
 
