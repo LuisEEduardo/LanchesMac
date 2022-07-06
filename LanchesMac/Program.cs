@@ -1,90 +1,17 @@
-using LanchesMac.Context;
-using LanchesMac.Models;
-using LanchesMac.Repositories;
-using LanchesMac.Repositories.Interfaces;
-using LanchesMac.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+namespace LanchesMac;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
-
-//builder.Services.Configure<IdentityOptions>(options =>
-//{
-//    // Default Password settings
-//    options.Password.RequireDigit = false;
-//    options.Password.RequireLowercase = false;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireUppercase = false;
-//    options.Password.RequiredLength = 3;
-//    options.Password.RequiredUniqueChars = 1;
-//});
-
-builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
-builder.Services.AddScoped<ILancheRepositorio, LancheRepositorio>();
-builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
-builder.Services.AddTransient<IPedidoRespository, PedidoRepository>();
-
-builder.Services.AddScoped<ISeedUserRoleInicial, SeedUserRoleInitial>();
-
-// Configuração do HttpContext
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-// Configuração da Session
-builder.Services.AddMemoryCache();
-builder.Services.AddSession();
-
-var app = builder.Build();
-ISeedUserRoleInicial seedUserRoleInicial = app.Services.GetRequiredService<ISeedUserRoleInicial>();    
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-
-// Criar os perfis
-seedUserRoleInicial.SeedRoles();
-// Criar os usuários e atribui os perfis
-seedUserRoleInicial.SeedUsers();
-
-// Configuração da Session
-app.UseSession();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-    name: "categoriaFiltro",
-    pattern: "Lanche/{action}/{categoria?}",
-    defaults: new { controller = "Lanche", action = "List" });
-
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-
-    endpoints.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}"
-    );
-});
-
-app.Run();
