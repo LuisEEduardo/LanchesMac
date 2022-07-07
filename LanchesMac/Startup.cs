@@ -1,4 +1,5 @@
-﻿using LanchesMac.Context;
+﻿using LanchesMac.Areas.Admin.Services;
+using LanchesMac.Context;
 using LanchesMac.Models;
 using LanchesMac.Repositories;
 using LanchesMac.Repositories.Interfaces;
@@ -43,6 +44,7 @@ public class Startup
         services.AddScoped<ILancheRepositorio, LancheRepositorio>();
         services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
         services.AddTransient<IPedidoRespository, PedidoRepository>();
+        services.AddScoped<RelatorioVendasService>();
 
         services.AddScoped<ISeedUserRoleInicial, SeedUserRoleInitial>();
 

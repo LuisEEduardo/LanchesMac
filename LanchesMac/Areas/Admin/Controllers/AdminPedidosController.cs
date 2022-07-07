@@ -1,5 +1,6 @@
 ﻿using LanchesMac.Context;
 using LanchesMac.Models;
+using LanchesMac.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -172,5 +173,28 @@ namespace LanchesMac.Areas.Admin.Controllers
         {
             return _context.Pedidos.Any(e => e.Id == id);
         }
+
+        public IActionResult PedidoLanches(int? id)
+        {
+            var pedido = _context.Pedidos
+                                .Include(pd => pd.PedidoItens)
+                                    .ThenInclude(l => l.Lanche)
+                                .FirstOrDefault(p => p.Id == id);
+
+            if (pedido == null)
+            {
+                Response.StatusCode = 404;
+                return View("PedidoNotFound", id.Value);
+            }
+
+            PedidoLancheViewModel pedidoLanches = new()
+            {
+                Pedido = pedido,
+                PedidoDetalhes = pedido.PedidoItens
+            };
+
+            return View(pedidoLanches);
+        }
+
     }
 }
